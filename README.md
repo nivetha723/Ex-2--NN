@@ -1,6 +1,6 @@
-<H3>Name</H3>
-<H3>Register no.</H3>
-<H3>Date</H3>
+## Name:Nivetha N
+## Reg.no: 212225040290
+
 <H3>Experiment No. 2 </H3>
 ## Implementation of Perceptron for Binary Classification
 # AIM:
@@ -49,11 +49,72 @@ STEP 9:For ‘N ‘ iterations ,do the following:<BR>
 STEP 10:Plot the error for each iteration <BR>
 STEP 11:Print the accuracy<BR>
 # PROGRAM:
-    ''' Insert your code here '''
+ ```
+from sklearn.model_selection import train_test_split
 
+x_train, x_test, y_train, y_test = train_test_split(
+    x,
+    y,
+    test_size=0.25,
+    random_state=0,
+    stratify=y
+)
+class Perceptron:
+
+    def __init__(self, learning_rate=0.01):
+        self.learning_rate = learning_rate
+        self._b = 0.0
+        self._w = None
+        self.misclassified_samples = []
+
+    def fit(self, x, y, n_iter=10):
+        self._b = 0.0
+        self._w = np.zeros(x.shape[1])
+        self.misclassified_samples = []
+
+        for _ in range(n_iter):
+            errors = 0
+
+            for xi, yi in zip(x, y):
+                update = self.learning_rate * (
+                    yi - self.predict(xi)
+                )
+
+                self._b += update
+                self._w += update * xi
+
+                errors += int(update != 0.0)
+
+            self.misclassified_samples.append(errors)
+
+    def f(self, x):
+        return np.dot(x, self._w) + self._b
+
+    def predict(self, x):
+        return np.where(self.f(x) >= 0, 1, -1)
+classifier = Perceptron(learning_rate=0.01)
+
+classifier.fit(x_train, y_train, n_iter=50)
+plt.plot(
+    range(1, len(classifier.misclassified_samples) + 1),
+    classifier.misclassified_samples,
+    marker='o'
+)
+
+plt.xlabel('Epoch')
+plt.ylabel('Number of Misclassifications')
+plt.title('Training Errors per Epoch')
+plt.show()
+```   
 # OUTPUT:
+<img width="1036" height="735" alt="Screenshot 2026-11-01 205048" src="https://github.com/user-attachments/assets/fa7fa3c2-dd5a-4619-acf5-d422087a3a5e" />
+<img width="828" height="568" alt="Screenshot 2026-11-01 205146" src="https://github.com/user-attachments/assets/f9fe232a-ab2b-4e63-9d99-84da068c8ea3" />
 
-    ''' Show your result '''
+<img width="900" height="572" alt="Screenshot 2026-11-01 205228" src="https://github.com/user-attachments/assets/cd952655-725a-4a96-8c7d-98e9f03b7bb8" />
+
+
+
+    
 
 # RESULT:
  Thus, a single layer perceptron model is implemented using python to classify Iris data set.
